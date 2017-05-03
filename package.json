@@ -1,0 +1,23 @@
+{
+  "name": "danger-plugin-no-test-shortcuts",
+  "version": "0.0.1",
+  "description": "Danger plugin to prevent merging test shortcuts (.only and .skip)",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macklinu/danger-plugin-no-test-shortcuts.git"
+  },
+  "keywords": [
+    "danger",
+    "danger-plugin"
+  ],
+  "author": "Macklin Underdown <macklinu@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/macklinu/danger-plugin-no-test-shortcuts/issues"
+  },
+  "homepage": "https://github.com/macklinu/danger-plugin-no-test-shortcuts#readme"
+}
