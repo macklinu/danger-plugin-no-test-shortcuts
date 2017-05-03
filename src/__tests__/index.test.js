@@ -167,4 +167,51 @@ describe('noTestShortcuts()', () => {
       })
     })
   })
+  describe('config: patterns', () => {
+    const MOCK_FILE_INFO = {
+      'tests/index.test.js': 'test.on.ly',
+      'tests/subdirectory/myTest.js': 'test.sk.ip'
+    }
+    beforeEach(() => {
+      require('fs').__setMockFiles(MOCK_FILE_INFO)
+      global.fail = jest.fn()
+    })
+    afterEach(() => {
+      global.danger = undefined
+      global.fail = undefined
+    })
+
+    it('allows people to set custom only assertion patterns', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/index.test.js'],
+          modified_files: []
+        }
+      }
+      noTestShortcuts({
+        patterns: {only: ['on.ly']}
+      })
+
+      expect(global.fail).toHaveBeenCalledWith(
+        'an `only` was left in tests: tests/index.test.js'
+      )
+    })
+
+    it('allows people to set custom skip assertion patterns', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/subdirectory/myTest.js'],
+          modified_files: []
+        }
+      }
+      noTestShortcuts({
+        skippedTests: 'fail',
+        patterns: {skip: ['sk.ip']}
+      })
+
+      expect(global.fail).toHaveBeenCalledWith(
+        'a `skip` was left in tests: tests/subdirectory/myTest.js'
+      )
+    })
+  })
 })
