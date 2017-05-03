@@ -12,7 +12,12 @@ export default function noTestShortcuts (
   const newOrModifiedTests = newOrModifiedFiles.filter(testFilePredicate)
   for (const file of newOrModifiedTests) {
     const content = readFileSync(file).toString()
-    if (/.*(context|describe|it|test)\.only.*/gi.test(content)) {
+    if (
+      content.includes('context.only') ||
+      content.includes('describe.only') ||
+      content.includes('test.only') ||
+      content.includes('it.only')
+    ) {
       fail(`an \`only\` was left in tests: ${file}`)
     }
     switch (skippedTests) {
@@ -20,9 +25,13 @@ export default function noTestShortcuts (
         break
       case 'fail':
       case 'warn':
-        const dangerFn = global[skippedTests]
-        if (/.*(context|describe|it|test)\.skip.*/gi.test(content)) {
-          dangerFn(`a \`skip\` was left in tests: ${file}`)
+        if (
+          content.includes('context.skip') ||
+          content.includes('describe.skip') ||
+          content.includes('test.skip') ||
+          content.includes('it.skip')
+        ) {
+          global[skippedTests](`a \`skip\` was left in tests: ${file}`)
         }
         break
       default:
