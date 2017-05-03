@@ -1,14 +1,16 @@
 {
   "name": "danger-plugin-no-test-shortcuts",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "Danger plugin to prevent merging test shortcuts (.only and .skip)",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "commit": "git-cz",
+    "test": "jest",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/macklinu/danger-plugin-no-test-shortcuts.git"
+    "url": "https://github.com/macklinu/danger-plugin-no-test-shortcuts.git"
   },
   "keywords": [
     "danger",
@@ -19,5 +21,15 @@
   "bugs": {
     "url": "https://github.com/macklinu/danger-plugin-no-test-shortcuts/issues"
   },
-  "homepage": "https://github.com/macklinu/danger-plugin-no-test-shortcuts#readme"
+  "homepage": "https://github.com/macklinu/danger-plugin-no-test-shortcuts#readme",
+  "devDependencies": {
+    "commitizen": "^2.9.6",
+    "cz-conventional-changelog": "^2.0.0",
+    "semantic-release": "^6.3.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
 }
