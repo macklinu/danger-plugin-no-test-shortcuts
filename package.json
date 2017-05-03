@@ -25,6 +25,7 @@
   "devDependencies": {
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
+    "jest": "^19.0.2",
     "semantic-release": "^6.3.2"
   },
   "config": {
