@@ -50,7 +50,8 @@ describe('noTestShortcuts()', () => {
   describe('config: skippedTests', () => {
     const MOCK_FILE_INFO = {
       'tests/skip.test.js': 'test.skip("some test");',
-      'tests/noSkip.test.js': 'test("My Test", () => {\n  expect(true).toBe(true)\n  });'
+      'tests/noSkip.test.js': 'test("My Test", () => {\n  expect(true).toBe(true)\n  });',
+      'tests/only.test.js': 'describe.only("My Test");'
     }
     beforeEach(() => {
       require('fs').__setMockFiles(MOCK_FILE_INFO)
@@ -93,6 +94,20 @@ describe('noTestShortcuts()', () => {
       expect(global.warn).toHaveBeenCalledWith(
         'a `skip` was left in tests: tests/skip.test.js'
       )
+    })
+    it('does not warn when skippedTests: "warn" is passed in and test contains .only()', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/only.test.js'],
+          modified_files: []
+        }
+      }
+
+      noTestShortcuts({
+        skippedTests: 'warn'
+      })
+
+      expect(global.warn).not.toHaveBeenCalled()
     })
     it('does not fail when tests do not contain .skip()', () => {
       global.danger = {
