@@ -4,6 +4,7 @@
   "description": "Danger plugin to prevent merging test shortcuts (.only and .skip)",
   "main": "index.js",
   "scripts": {
+    "precommit": "lint-staged",
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
     "test": "jest",
@@ -28,6 +29,8 @@
     "cz-conventional-changelog": "^2.0.0",
     "husky": "^0.13.3",
     "jest": "^19.0.2",
+    "lint-staged": "^3.4.1",
+    "prettier-standard": "^4.1.0",
     "semantic-release": "^6.3.2",
     "validate-commit-msg": "^2.12.1"
   },
@@ -35,5 +38,11 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier-standard",
+      "git add"
+    ]
   }
 }
