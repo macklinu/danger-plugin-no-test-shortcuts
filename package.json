@@ -2,13 +2,15 @@
   "name": "danger-plugin-no-test-shortcuts",
   "version": "0.0.0-development",
   "description": "Danger plugin to prevent merging test shortcuts (.only and .skip)",
-  "main": "index.js",
+  "main": "dist/index.js",
   "typings": "index.d.ts",
   "scripts": {
     "precommit": "lint-staged",
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
+    "build": "babel src/index.js --out-dir dist",
     "test": "jest",
+    "prepublish": "npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
@@ -26,6 +28,7 @@
   },
   "homepage": "https://github.com/macklinu/danger-plugin-no-test-shortcuts#readme",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-jest": "^19.0.0",
     "babel-preset-es2015": "^6.24.1",
     "commitizen": "^2.9.6",

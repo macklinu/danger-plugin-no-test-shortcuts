@@ -1,4 +1,4 @@
-import noTestShortcuts from '../index'
+import noTestShortcuts from '../../index'
 
 noTestShortcuts()
 
