@@ -47,6 +47,80 @@ describe('noTestShortcuts()', () => {
       )
     })
   })
+  describe('config: skippedTests', () => {
+    const MOCK_FILE_INFO = {
+      'tests/skip.test.js': 'test.skip("some test");',
+      'tests/noSkip.test.js': 'test("My Test", () => {\n  expect(true).toBe(true)\n  });'
+    }
+    beforeEach(() => {
+      require('fs').__setMockFiles(MOCK_FILE_INFO)
+      global.fail = jest.fn()
+      global.warn = jest.fn()
+    })
+    afterEach(() => {
+      global.danger = undefined
+      global.fail = undefined
+      global.warn = undefined
+    })
+    it('fails when skippedTests: "fail" is passed in', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/skip.test.js'],
+          modified_files: []
+        }
+      }
+
+      noTestShortcuts({
+        skippedTests: 'fail'
+      })
+
+      expect(global.fail).toHaveBeenCalledWith(
+        'a `skip` was left in tests: tests/skip.test.js'
+      )
+    })
+    it('warns when skippedTests: "warn" is passed in', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/skip.test.js'],
+          modified_files: []
+        }
+      }
+
+      noTestShortcuts({
+        skippedTests: 'warn'
+      })
+
+      expect(global.warn).toHaveBeenCalledWith(
+        'a `skip` was left in tests: tests/skip.test.js'
+      )
+    })
+    it('does not fail when tests do not contain .skip()', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/noSkip.test.js'],
+          modified_files: []
+        }
+      }
+
+      noTestShortcuts({
+        skippedTests: 'fail'
+      })
+
+      expect(global.fail).not.toHaveBeenCalled()
+    })
+    it('defaults to ignoring skipped tests', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/skip.test.js'],
+          modified_files: []
+        }
+      }
+
+      noTestShortcuts()
+
+      expect(global.fail).not.toHaveBeenCalled()
+    })
+  })
   describe('test function names', () => {
     ;['describe', 'context', 'it', 'test'].forEach(testFn => {
       const MOCK_FILE_INFO = {
