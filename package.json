@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "description": "Danger plugin to prevent merging test shortcuts (.only and .skip)",
   "main": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
     "precommit": "lint-staged",
     "commit": "git-cz",
@@ -34,6 +35,8 @@
     "lint-staged": "^3.4.1",
     "prettier-standard": "^4.1.0",
     "semantic-release": "^6.3.2",
+    "typescript": "^2.3.2",
+    "typings-tester": "^0.2.2",
     "validate-commit-msg": "^2.12.1"
   },
   "config": {
