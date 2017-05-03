@@ -9,12 +9,7 @@ export default function noTestShortcuts (
   const newOrModifiedTests = newOrModifiedFiles.filter(testFilePredicate)
   newOrModifiedTests.forEach(file => {
     const content = readFileSync(file).toString()
-    if (
-      content.includes('it.only') ||
-      content.includes('describe.only') ||
-      content.includes('context.only') ||
-      content.includes('test.only')
-    ) {
+    if (/.*context|describe|it|test\.only.*/gi.test(content)) {
       fail(`an \`only\` was left in tests: ${file}`)
     }
   })
