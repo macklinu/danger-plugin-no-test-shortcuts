@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "commit": "git-cz",
+    "commitmsg": "validate-commit-msg",
     "test": "jest",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -25,8 +26,10 @@
   "devDependencies": {
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
+    "husky": "^0.13.3",
     "jest": "^19.0.2",
-    "semantic-release": "^6.3.2"
+    "semantic-release": "^6.3.2",
+    "validate-commit-msg": "^2.12.1"
   },
   "config": {
     "commitizen": {
