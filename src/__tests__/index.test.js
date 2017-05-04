@@ -29,7 +29,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.fail).toHaveBeenCalledWith(
-        'an `only` was left in tests: path/to/tests/index.test.js'
+        'a `describe.only` was left in tests: path/to/tests/index.test.js'
       )
     })
     it('defaults to the tests/ directory', () => {
@@ -43,7 +43,7 @@ describe('noTestShortcuts()', () => {
       noTestShortcuts()
 
       expect(global.fail).toHaveBeenCalledWith(
-        'an `only` was left in tests: tests/subdirectory/myTest.js'
+        'a `describe.only` was left in tests: tests/subdirectory/myTest.js'
       )
     })
   })
@@ -76,7 +76,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.fail).toHaveBeenCalledWith(
-        'a `skip` was left in tests: tests/skip.test.js'
+        'a `test.skip` was left in tests: tests/skip.test.js'
       )
     })
     it('warns when skippedTests: "warn" is passed in', () => {
@@ -92,7 +92,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.warn).toHaveBeenCalledWith(
-        'a `skip` was left in tests: tests/skip.test.js'
+        'a `test.skip` was left in tests: tests/skip.test.js'
       )
     })
     it('does not warn when skippedTests: "warn" is passed in and test contains .only()', () => {
@@ -163,7 +163,7 @@ describe('noTestShortcuts()', () => {
         noTestShortcuts()
 
         expect(global.fail)
-          .toHaveBeenCalledWith(`an \`only\` was left in tests: tests/${testFn}.test.js`)
+          .toHaveBeenCalledWith(`${testFn === 'it' ? 'an' : 'a'} \`${testFn}.only\` was left in tests: tests/${testFn}.test.js`)
       })
     })
   })
@@ -193,7 +193,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.fail).toHaveBeenCalledWith(
-        'an `only` was left in tests: tests/index.test.js'
+        'an `on.ly` was left in tests: tests/index.test.js'
       )
     })
 
@@ -210,7 +210,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.fail).toHaveBeenCalledWith(
-        'a `skip` was left in tests: tests/subdirectory/myTest.js'
+        'a `sk.ip` was left in tests: tests/subdirectory/myTest.js'
       )
     })
   })
