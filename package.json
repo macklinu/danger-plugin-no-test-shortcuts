@@ -8,7 +8,7 @@
     "precommit": "lint-staged",
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
-    "build": "babel src --out-dir dist --only index.js",
+    "build": "babel src --out-dir dist --ignore __tests__,__mocks__",
     "test": "jest",
     "prepublish": "npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
