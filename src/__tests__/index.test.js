@@ -29,7 +29,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.fail).toHaveBeenCalledWith(
-        'an `only` was left in tests: path/to/tests/index.test.js'
+        'a `describe.only` was left in tests: path/to/tests/index.test.js'
       )
     })
     it('defaults to the tests/ directory', () => {
@@ -43,7 +43,7 @@ describe('noTestShortcuts()', () => {
       noTestShortcuts()
 
       expect(global.fail).toHaveBeenCalledWith(
-        'an `only` was left in tests: tests/subdirectory/myTest.js'
+        'a `describe.only` was left in tests: tests/subdirectory/myTest.js'
       )
     })
   })
@@ -76,7 +76,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.fail).toHaveBeenCalledWith(
-        'a `skip` was left in tests: tests/skip.test.js'
+        'a `test.skip` was left in tests: tests/skip.test.js'
       )
     })
     it('warns when skippedTests: "warn" is passed in', () => {
@@ -92,7 +92,7 @@ describe('noTestShortcuts()', () => {
       })
 
       expect(global.warn).toHaveBeenCalledWith(
-        'a `skip` was left in tests: tests/skip.test.js'
+        'a `test.skip` was left in tests: tests/skip.test.js'
       )
     })
     it('does not warn when skippedTests: "warn" is passed in and test contains .only()', () => {
@@ -163,8 +163,55 @@ describe('noTestShortcuts()', () => {
         noTestShortcuts()
 
         expect(global.fail)
-          .toHaveBeenCalledWith(`an \`only\` was left in tests: tests/${testFn}.test.js`)
+          .toHaveBeenCalledWith(`${testFn === 'it' ? 'an' : 'a'} \`${testFn}.only\` was left in tests: tests/${testFn}.test.js`)
       })
+    })
+  })
+  describe('config: patterns', () => {
+    const MOCK_FILE_INFO = {
+      'tests/index.test.js': 'test.on.ly',
+      'tests/subdirectory/myTest.js': 'test.sk.ip'
+    }
+    beforeEach(() => {
+      require('fs').__setMockFiles(MOCK_FILE_INFO)
+      global.fail = jest.fn()
+    })
+    afterEach(() => {
+      global.danger = undefined
+      global.fail = undefined
+    })
+
+    it('allows people to set custom only assertion patterns', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/index.test.js'],
+          modified_files: []
+        }
+      }
+      noTestShortcuts({
+        patterns: {only: ['on.ly']}
+      })
+
+      expect(global.fail).toHaveBeenCalledWith(
+        'an `on.ly` was left in tests: tests/index.test.js'
+      )
+    })
+
+    it('allows people to set custom skip assertion patterns', () => {
+      global.danger = {
+        git: {
+          created_files: ['tests/subdirectory/myTest.js'],
+          modified_files: []
+        }
+      }
+      noTestShortcuts({
+        skippedTests: 'fail',
+        patterns: {skip: ['sk.ip']}
+      })
+
+      expect(global.fail).toHaveBeenCalledWith(
+        'a `sk.ip` was left in tests: tests/subdirectory/myTest.js'
+      )
     })
   })
 })
