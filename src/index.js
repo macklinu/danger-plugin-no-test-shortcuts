@@ -1,7 +1,8 @@
 import {readFileSync} from 'fs'
+import _ from 'lodash'
 
 const getStart = pattern =>
-  ['a', 'e', 'i', 'o', 'u'].includes(pattern[0].toLowerCase()) ? 'an' : 'a'
+  _.includes(['a', 'e', 'i', 'o', 'u'], pattern[0].toLowerCase()) ? 'an' : 'a'
 
 export default function noTestShortcuts (
   {
@@ -22,7 +23,7 @@ export default function noTestShortcuts (
       'test.only',
       'it.only'
     ].concat(patterns.only || [])
-    const match = allPatterns.find(p => content.includes(p))
+    const match = allPatterns.find(p => _.includes(content, p))
 
     if (match) {
       fail(`${getStart(match)} \`${match}\` was left in tests: ${file}`)
@@ -33,14 +34,14 @@ export default function noTestShortcuts (
       case 'fail':
       case 'warn':
         const skipPatternsResult = (patterns.skip || [])
-          .find(p => content.includes(p))
+          .find(p => _.includes(content, p))
         const skipPatterns = [
           'context.skip',
           'describe.skip',
           'test.skip',
           'it.skip'
         ].concat(patterns.skip || [])
-        const skipMatch = skipPatterns.find(p => content.includes(p))
+        const skipMatch = skipPatterns.find(p => _.includes(content, p))
         if (skipMatch) {
           global[
             skippedTests
