@@ -1,18 +1,27 @@
-import {readFileSync} from 'fs'
-import _ from 'lodash'
+import { readFileSync } from 'fs'
+import * as _ from 'lodash'
 
-const getStart = pattern =>
+export interface Config {
+  testFilePredicate?: (filePath: string) => boolean
+  skippedTests?: 'ignore' | 'warn' | 'fail'
+  patterns?: {
+    only?: string[],
+    skip?: string[],
+  }
+}
+
+const getStart = (pattern: string) =>
   _.includes(['a', 'e', 'i', 'o', 'u'], pattern[0].toLowerCase()) ? 'an' : 'a'
 
-export default function noTestShortcuts (
-  {
-    testFilePredicate = path => path.startsWith('tests'),
+export default function noTestShortcuts(config: Config = {}) {
+  const {
+    testFilePredicate = (path: string): boolean => path.startsWith('tests'),
     skippedTests = 'ignore',
-    patterns = {only: [], skip: []}
-  } = {}
-) {
-  const newOrModifiedFiles = danger.git.modified_files.concat(
-    danger.git.created_files
+    patterns = { only: [], skip: [] },
+  } = config
+
+  const newOrModifiedFiles: string[] = danger.git.modified_files.concat(
+    danger.git.created_files,
   )
   const newOrModifiedTests = newOrModifiedFiles.filter(testFilePredicate)
   for (const file of newOrModifiedTests) {
@@ -21,31 +30,28 @@ export default function noTestShortcuts (
       'context.only',
       'describe.only',
       'test.only',
-      'it.only'
+      'it.only',
     ].concat(patterns.only || [])
-    const match = allPatterns.find(p => _.includes(content, p))
+    const match = allPatterns.find((p) => _.includes(content, p))
 
     if (match) {
       fail(`${getStart(match)} \`${match}\` was left in tests: ${file}`)
     }
+
     switch (skippedTests) {
       case 'ignore':
         break
       case 'fail':
       case 'warn':
-        const skipPatternsResult = (patterns.skip || [])
-          .find(p => _.includes(content, p))
         const skipPatterns = [
           'context.skip',
           'describe.skip',
           'test.skip',
-          'it.skip'
+          'it.skip',
         ].concat(patterns.skip || [])
-        const skipMatch = skipPatterns.find(p => _.includes(content, p))
+        const skipMatch = skipPatterns.find((p) => _.includes(content, p))
         if (skipMatch) {
-          global[
-            skippedTests
-          ](`${getStart(skipMatch)} \`${skipMatch}\` was left in tests: ${file}`)
+          global[skippedTests](`${getStart(skipMatch)} \`${skipMatch}\` was left in tests: ${file}`)
         }
         break
       default:
