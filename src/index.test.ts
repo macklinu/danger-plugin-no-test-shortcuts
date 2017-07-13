@@ -1,20 +1,24 @@
+declare var global: any
+
 jest.mock('fs')
 
 import noTestShortcuts from './'
 
+const defaultTestFilePredicate = (path: string): boolean =>
+  path.startsWith('tests')
+
+beforeEach(() => {
+  global.fail = jest.fn()
+  global.warn = jest.fn()
+})
+
 describe('noTestShortcuts()', () => {
   describe('config: testFilePredicate', () => {
-    const MOCK_FILE_INFO = {
-      'path/to/tests/index.test.js': 'describe.only("some test");',
-      'tests/subdirectory/myTest.js': 'describe.only("My Test");',
-    }
     beforeEach(() => {
-      require('fs').__setMockFiles(MOCK_FILE_INFO)
-      global.fail = jest.fn()
-    })
-    afterEach(() => {
-      global.danger = undefined
-      global.fail = undefined
+      require('fs').__setMockFiles({
+        'path/to/tests/index.test.js': 'describe.only("some test");',
+        'tests/subdirectory/myTest.js': 'describe.only("My Test");',
+      })
     })
     it('honors test file predicate', () => {
       global.danger = {
@@ -40,7 +44,9 @@ describe('noTestShortcuts()', () => {
         },
       }
 
-      noTestShortcuts()
+      noTestShortcuts({
+        testFilePredicate: defaultTestFilePredicate,
+      })
 
       expect(global.fail).toHaveBeenCalledWith(
         'a `describe.only` was left in tests: tests/subdirectory/myTest.js'
@@ -48,21 +54,13 @@ describe('noTestShortcuts()', () => {
     })
   })
   describe('config: skippedTests', () => {
-    const MOCK_FILE_INFO = {
-      'tests/noSkip.test.js':
-        'test("My Test", () => {\n  expect(true).toBe(true)\n  });',
-      'tests/only.test.js': 'describe.only("My Test");',
-      'tests/skip.test.js': 'test.skip("some test");',
-    }
     beforeEach(() => {
-      require('fs').__setMockFiles(MOCK_FILE_INFO)
-      global.fail = jest.fn()
-      global.warn = jest.fn()
-    })
-    afterEach(() => {
-      global.danger = undefined
-      global.fail = undefined
-      global.warn = undefined
+      require('fs').__setMockFiles({
+        'tests/noSkip.test.js':
+          'test("My Test", () => {\n  expect(true).toBe(true)\n  });',
+        'tests/only.test.js': 'describe.only("My Test");',
+        'tests/skip.test.js': 'test.skip("some test");',
+      })
     })
     it('fails when skippedTests: "fail" is passed in', () => {
       global.danger = {
@@ -74,6 +72,7 @@ describe('noTestShortcuts()', () => {
 
       noTestShortcuts({
         skippedTests: 'fail',
+        testFilePredicate: defaultTestFilePredicate,
       })
 
       expect(global.fail).toHaveBeenCalledWith(
@@ -90,6 +89,7 @@ describe('noTestShortcuts()', () => {
 
       noTestShortcuts({
         skippedTests: 'warn',
+        testFilePredicate: defaultTestFilePredicate,
       })
 
       expect(global.warn).toHaveBeenCalledWith(
@@ -106,6 +106,7 @@ describe('noTestShortcuts()', () => {
 
       noTestShortcuts({
         skippedTests: 'warn',
+        testFilePredicate: defaultTestFilePredicate,
       })
 
       expect(global.warn).not.toHaveBeenCalled()
@@ -120,6 +121,7 @@ describe('noTestShortcuts()', () => {
 
       noTestShortcuts({
         skippedTests: 'fail',
+        testFilePredicate: defaultTestFilePredicate,
       })
 
       expect(global.fail).not.toHaveBeenCalled()
@@ -132,26 +134,22 @@ describe('noTestShortcuts()', () => {
         },
       }
 
-      noTestShortcuts()
+      noTestShortcuts({
+        testFilePredicate: defaultTestFilePredicate,
+      })
 
       expect(global.fail).not.toHaveBeenCalled()
     })
   })
   describe('test function names', () => {
     ;['describe', 'context', 'it', 'test'].forEach(testFn => {
-      const MOCK_FILE_INFO = {
-        'tests/context.test.js': 'context.only("some test");',
-        'tests/describe.test.js': 'describe.only("some test");',
-        'tests/it.test.js': 'it.only("some test");',
-        'tests/test.test.js': 'test.only("some test");',
-      }
       beforeEach(() => {
-        require('fs').__setMockFiles(MOCK_FILE_INFO)
-        global.fail = jest.fn()
-      })
-      afterEach(() => {
-        global.danger = undefined
-        global.fail = undefined
+        require('fs').__setMockFiles({
+          'tests/context.test.js': 'context.only("some test");',
+          'tests/describe.test.js': 'describe.only("some test");',
+          'tests/it.test.js': 'it.only("some test");',
+          'tests/test.test.js': 'test.only("some test");',
+        })
       })
       it(`fails the build when a test contains ${testFn}.only`, () => {
         global.danger = {
@@ -161,7 +159,9 @@ describe('noTestShortcuts()', () => {
           },
         }
 
-        noTestShortcuts()
+        noTestShortcuts({
+          testFilePredicate: defaultTestFilePredicate,
+        })
 
         expect(global.fail).toHaveBeenCalledWith(
           `${testFn === 'it'
@@ -172,17 +172,11 @@ describe('noTestShortcuts()', () => {
     })
   })
   describe('config: patterns', () => {
-    const MOCK_FILE_INFO = {
-      'tests/index.test.js': 'test.on.ly',
-      'tests/subdirectory/myTest.js': 'test.sk.ip',
-    }
     beforeEach(() => {
-      require('fs').__setMockFiles(MOCK_FILE_INFO)
-      global.fail = jest.fn()
-    })
-    afterEach(() => {
-      global.danger = undefined
-      global.fail = undefined
+      require('fs').__setMockFiles({
+        'tests/index.test.js': 'test.on.ly',
+        'tests/subdirectory/myTest.js': 'test.sk.ip',
+      })
     })
 
     it('allows people to set custom only assertion patterns', () => {
@@ -194,6 +188,7 @@ describe('noTestShortcuts()', () => {
       }
       noTestShortcuts({
         patterns: { only: ['on.ly'] },
+        testFilePredicate: defaultTestFilePredicate,
       })
 
       expect(global.fail).toHaveBeenCalledWith(
@@ -211,6 +206,7 @@ describe('noTestShortcuts()', () => {
       noTestShortcuts({
         patterns: { skip: ['sk.ip'] },
         skippedTests: 'fail',
+        testFilePredicate: defaultTestFilePredicate,
       })
 
       expect(global.fail).toHaveBeenCalledWith(
@@ -227,6 +223,8 @@ describe('noTestShortcuts()', () => {
       },
     }
 
-    expect(() => noTestShortcuts()).not.toThrow()
+    expect(() =>
+      noTestShortcuts({ testFilePredicate: defaultTestFilePredicate })
+    ).not.toThrow()
   })
 })
