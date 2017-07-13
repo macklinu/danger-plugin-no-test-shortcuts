@@ -8,13 +8,13 @@ const fs = jest.genMockFromModule('fs')
 // what the files on the "mock" filesystem should look like when any of the
 // `fs` APIs are used.
 let mockFiles = Object.create(null)
-function __setMockFiles (newMockFiles) {
+function __setMockFiles(newMockFiles) {
   mockFiles = newMockFiles
 }
 
 // A custom version of `readFileSync` that reads from the special mocked out
 // file list set via __setMockFiles
-function readFileSync (directoryPath) {
+function readFileSync(directoryPath) {
   return mockFiles[directoryPath] || null
 }
 

@@ -12,6 +12,8 @@
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
     "build": "tsc -p tsconfig.json",
+    "prettier": "prettier --no-semi --trailing-comma=es5 --single-quote",
+    "prettier:ts": "npm run prettier -- --parser=typescript",
     "lint": "tslint 'src/**/*.ts'",
     "test": "jest",
     "prepublish": "npm run build",
@@ -40,9 +42,11 @@
     "husky": "^0.13.3",
     "jest": "^20.0.1",
     "lint-staged": "^3.4.1",
+    "prettier": "^1.5.2",
     "semantic-release": "^6.3.2",
     "ts-jest": "^20.0.5",
     "tslint": "^5.4.2",
+    "tslint-config-prettier": "^1.1.0",
     "typescript": "^2.3.4",
     "validate-commit-msg": "^2.12.1"
   },
@@ -63,7 +67,12 @@
     }
   },
   "lint-staged": {
+    "*.js": [
+      "npm run prettier -- --write",
+      "git add"
+    ],
     "*.ts": [
+      "npm run prettier:ts -- --write",
       "tslint --fix",
       "git add"
     ]

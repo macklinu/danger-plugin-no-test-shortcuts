@@ -1,10 +1,9 @@
 {
   "extends": [
-    "tslint:recommended"
+    "tslint:latest",
+    "tslint-config-prettier"
   ],
   "rules": {
-    "interface-name": [true, "never-prefix"],
-    "semicolon": [true, "never"],
-    "quotemark": [true, "single"]
+    "interface-name": [false]
   }
 }
