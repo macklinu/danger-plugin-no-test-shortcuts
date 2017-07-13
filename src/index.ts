@@ -20,9 +20,9 @@ export default function noTestShortcuts(config: Config = {}) {
     patterns = { only: [], skip: [] },
   } = config
 
-  const newOrModifiedFiles: string[] = danger.git.modified_files.concat(
-    danger.git.created_files
-  )
+  const newOrModifiedFiles: string[] = danger.git.modified_files
+    .concat(danger.git.created_files)
+    .filter(Boolean)
   const newOrModifiedTests = newOrModifiedFiles.filter(testFilePredicate)
   for (const file of newOrModifiedTests) {
     const content = readFileSync(file).toString()

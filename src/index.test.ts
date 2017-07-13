@@ -218,4 +218,15 @@ describe('noTestShortcuts()', () => {
       )
     })
   })
+  // Related to https://github.com/danger/danger-js/issues/304
+  it('filters undefined filenames', () => {
+    global.danger = {
+      git: {
+        created_files: ['path/to/tests/index.test.js'],
+        modified_files: [undefined],
+      },
+    }
+
+    expect(() => noTestShortcuts()).not.toThrow()
+  })
 })
