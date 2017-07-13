@@ -5,8 +5,8 @@ export interface Config {
   testFilePredicate?: (filePath: string) => boolean
   skippedTests?: 'ignore' | 'warn' | 'fail'
   patterns?: {
-    only?: string[],
-    skip?: string[],
+    only?: string[]
+    skip?: string[]
   }
 }
 
@@ -21,7 +21,7 @@ export default function noTestShortcuts(config: Config = {}) {
   } = config
 
   const newOrModifiedFiles: string[] = danger.git.modified_files.concat(
-    danger.git.created_files,
+    danger.git.created_files
   )
   const newOrModifiedTests = newOrModifiedFiles.filter(testFilePredicate)
   for (const file of newOrModifiedTests) {
@@ -32,7 +32,7 @@ export default function noTestShortcuts(config: Config = {}) {
       'test.only',
       'it.only',
     ].concat(patterns.only || [])
-    const match = allPatterns.find((p) => _.includes(content, p))
+    const match = allPatterns.find(p => _.includes(content, p))
 
     if (match) {
       fail(`${getStart(match)} \`${match}\` was left in tests: ${file}`)
@@ -49,13 +49,17 @@ export default function noTestShortcuts(config: Config = {}) {
           'test.skip',
           'it.skip',
         ].concat(patterns.skip || [])
-        const skipMatch = skipPatterns.find((p) => _.includes(content, p))
+        const skipMatch = skipPatterns.find(p => _.includes(content, p))
         if (skipMatch) {
-          global[skippedTests](`${getStart(skipMatch)} \`${skipMatch}\` was left in tests: ${file}`)
+          global[skippedTests](
+            `${getStart(skipMatch)} \`${skipMatch}\` was left in tests: ${file}`
+          )
         }
         break
       default:
-        throw Error(`skippedTests option must be "warn", "fail", or "ignore" but was "${skippedTests}"`)
+        throw Error(
+          `skippedTests option must be "warn", "fail", or "ignore" but was "${skippedTests}"`
+        )
     }
   }
 }
