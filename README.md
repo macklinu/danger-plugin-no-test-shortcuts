@@ -13,10 +13,12 @@
 Import and invoke the `noTestShortcuts()` function in your Dangerfile:
 
 ```js
-// dangerfile.js or dangerfile.ts
+// dangerfile.js
 import noTestShortcuts from 'danger-plugin-no-test-shortcuts'
 
-noTestShortcuts()
+noTestShortcuts({
+  testFilePredicate: (filePath) => filePath.endsWith('.test.js'),
+})
 ```
 
 By default, Danger will fail the build if a new or modified test file contains `.only()` - this prevents merging changes that will prevent your entire test suite from running on each pull request.
@@ -25,8 +27,7 @@ This plugin takes an optional config object with a couple of options:
 
 ```js
 noTestShortcuts({
-  // A predicate for determining where your test files live.
-  // Defaults to file paths that start with 'tests' (e.g. tests/index.spec.js).
+  // A required predicate for determining where your test files live.
   testFilePredicate: (filePath) => filePath.endsWith('.test.js'),
 
   // Defines the behavior for handling skipped tests (e.g. test.skip()).
