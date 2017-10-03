@@ -39,7 +39,7 @@
     "@types/node": "^7.0.27",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
-    "husky": "^0.13.3",
+    "husky": "^0.15.0-beta.2",
     "jest": "^20.0.1",
     "lint-staged": "^3.4.1",
     "prettier": "^1.5.2",
