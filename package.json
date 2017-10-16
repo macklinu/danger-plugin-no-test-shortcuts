@@ -42,7 +42,7 @@
     "husky": "^0.13.3",
     "jest": "^20.0.1",
     "lint-staged": "^3.4.1",
-    "prettier": "^1.5.2",
+    "prettier": "^1.7.4",
     "semantic-release": "^6.3.2",
     "ts-jest": "^20.0.5",
     "tslint": "^5.4.2",
