@@ -36,7 +36,7 @@
   "devDependencies": {
     "@types/jest": "^21.1.2",
     "@types/lodash": "^4.14.65",
-    "@types/node": "^8.0.37",
+    "@types/node": "^10.5.4",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
     "husky": "^0.13.3",
