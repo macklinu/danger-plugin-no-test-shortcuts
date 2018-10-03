@@ -37,7 +37,7 @@
     "@types/jest": "^21.1.2",
     "@types/lodash": "^4.14.65",
     "@types/node": "^8.0.37",
-    "commitizen": "^2.9.6",
+    "commitizen": "^3.0.2",
     "cz-conventional-changelog": "^2.0.0",
     "husky": "^0.13.3",
     "jest": "^21.2.1",
